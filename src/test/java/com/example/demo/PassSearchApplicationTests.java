@@ -110,5 +110,6 @@ class PassSearchApplicationTests {
 		log.info("平均购物价格：{}" , balanceAvg1.getValue());
 	}
 	
-	//https://mp.weixin.qq.com/s/ojH-X3emovz2YOzoqNYPDQ
+	//https://mp.weixin.qq.com/s/9dmKmqk8YA6ZPfpH7paqpQ
+	//https://mp.weixin.qq.com/s/ojH-X3emovz2YOzoqNYPDQ	
 }
