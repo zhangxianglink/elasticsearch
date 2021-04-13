@@ -23,6 +23,7 @@ public class WebAppConfigurer implements WebMvcConfigurer {
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
 		//org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor
+		//https://blog.csdn.net/qq_26472621/article/details/102684266?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-1&spm=1001.2101.3001.4242
 		// add方法可以指定顺序，有多个自定义的WebMvcConfigurerAdapter时，可以改变相互之间的顺序
 		// 但是都在springmvc内置的converter前面
 		//org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
