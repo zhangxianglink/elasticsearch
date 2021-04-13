@@ -2,6 +2,7 @@ package com.example.demo.result;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -14,8 +15,15 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 @ControllerAdvice
 public class ResultResponseHandler implements ResponseBodyAdvice<Object>{
+	
+	@Autowired
+	private ObjectMapper objectMapper;
 
 	@Override
 	//判断是否要执行beforeBodyWrite方法，true为执行，false不执行
@@ -32,7 +40,12 @@ public class ResultResponseHandler implements ResponseBodyAdvice<Object>{
 	public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
 			Class<? extends HttpMessageConverter<?>> selectedConverterType, ServerHttpRequest request,
 			ServerHttpResponse response) {
-			 return new ResultResponse(ResultCode.SUCCESS, body);
+		/* 方式一，序列化为字符串
+		 * Object result = body; try { result = objectMapper.writeValueAsString(new
+		 * ResultResponse(ResultCode.SUCCESS, body)); } catch (JsonProcessingException
+		 * e) { // TODO Auto-generated catch block e.printStackTrace(); }
+		 */
+		 return new ResultResponse(ResultCode.SUCCESS, body);
 	}
 	
 	    @ExceptionHandler(value = BaseException.class)

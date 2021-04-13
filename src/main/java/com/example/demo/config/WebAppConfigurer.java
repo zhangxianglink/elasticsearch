@@ -19,18 +19,21 @@ public class WebAppConfigurer implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(new ResultResponseInterceptor()).addPathPatterns("/**");
 	}
-	
+
 	@Override
 	public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-		  // add方法可以指定顺序，有多个自定义的WebMvcConfigurerAdapter时，可以改变相互之间的顺序
-        // 但是都在springmvc内置的converter前面
-//        converters.add(0, new ByteArrayHttpMessageConverter());
-        ArrayList<HttpMessageConverter<?>> objects = new ArrayList<>();
-        for (HttpMessageConverter<?> converter : converters) {
-            if (converter.getClass().isAssignableFrom(StringHttpMessageConverter.class)) {
-                objects.add(converter);
-            }
-        }
-        converters.removeAll(objects);
+		//org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor
+		// add方法可以指定顺序，有多个自定义的WebMvcConfigurerAdapter时，可以改变相互之间的顺序
+		// 但是都在springmvc内置的converter前面
+		//org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
+//		converters.add(0, new MappingJackson2HttpMessageConverter());  
+		ArrayList<HttpMessageConverter<?>> objects = new ArrayList<>();
+		for (HttpMessageConverter<?> converter : converters) {
+			if (converter.getClass().isAssignableFrom(StringHttpMessageConverter.class)) {
+				objects.add(converter);
+			}
+		}
+		converters.removeAll(objects);
+
 	}
 }
