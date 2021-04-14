@@ -1,0 +1,7 @@
+spring:
+  redis:
+    host: 101.133.132.255
+    port: 6379
+    password: redispwd
+
+

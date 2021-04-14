@@ -69,5 +69,11 @@ POST pass_user/_update/1?if_seq_no=2&&if_primary_term=1
 
 ```
 
+**统一格式返回处理**
+
+**接口幂等性**
+
+**接口安全设计**
+
 
 
