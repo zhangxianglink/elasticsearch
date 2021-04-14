@@ -1,6 +1,9 @@
 package com.example.demo.config;
 
+import com.example.demo.model.sys.interceptor.TokenInterceptor;
 import com.example.demo.result.ResultResponseInterceptor;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -15,9 +18,15 @@ import org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConv
 @Configuration
 public class WebAppConfigurer implements WebMvcConfigurer {
 
+	private static final String[] excludePathPatterns  = {"/api/token/api_token","/api/token/sign"};
+	
+	@Autowired
+	private TokenInterceptor tokenInterceptor;
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(new ResultResponseInterceptor()).addPathPatterns("/**");
+        registry.addInterceptor(new ResultResponseInterceptor()).addPathPatterns("/demo/**");
+        registry.addInterceptor(tokenInterceptor).addPathPatterns("/api/**")
+        .excludePathPatterns(excludePathPatterns);
     }
 
     @Override

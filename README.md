@@ -71,9 +71,39 @@ POST pass_user/_update/1?if_seq_no=2&&if_primary_term=1
 
 **统一格式返回处理**
 
-**接口幂等性**
-
 **接口安全设计**
+
+**BUG1** [解决](https://stackoverflow.com/questions/23349180/java-config-for-spring-interceptor-where-interceptor-is-using-autowired-spring-b)
+
+```java
+# Interceptor 如果不配置成为spring bean 将无法使用自动注入功能，
+    public class LocaleInterceptor extends HandlerInterceptorAdaptor {
+
+    @Autowired
+    ISomeService someService;  // null
+
+    ...
+}
+
+解决方案：
+@EnableWebMvc
+@Configuration
+public class WebConfig extends WebMvcConfigurerAdapter {
+
+    @Bean
+    LocaleInterceptor localInterceptor() {
+         return new LocalInterceptor();
+    }
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        registry.addInterceptor(localeInterceptor());
+    }
+
+}
+```
+
+
 
 
 
