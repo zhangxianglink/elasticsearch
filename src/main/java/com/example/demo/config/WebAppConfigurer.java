@@ -43,6 +43,5 @@ public class WebAppConfigurer implements WebMvcConfigurer {
         }
         converters.removeAll(objects);
 
-        AbstractMessageConverterMethodProcessor
     }
 }
