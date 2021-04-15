@@ -71,6 +71,18 @@ POST pass_user/_update/1?if_seq_no=2&&if_primary_term=1
 
 **统一格式返回处理**
 
+```java
+org.springframework.web.servlet.mvc.method.annotation.AbstractMessageConverterMethodProcessor.writeWithMessageConverters(T, MethodParameter, ServletServerHttpRequest, ServletServerHttpResponse) 
+返回Controller结果前选择合适的 HttpMessageConverter
+    
+//     答案都在源码，删除StringHttpMessageConverter selectedMediaType对象首选项就是application/json，不删除就是默认的text/html
+
+//     https://blog.csdn.net/qq_26472621/article/details/102684266?utm_medium=distribute.pc_relevant.none-task-blog-baidujs_title-1&spm=1001.2101.3001.4242
+ 
+```
+
+
+
 **接口安全设计**
 
 **BUG1** [解决](https://stackoverflow.com/questions/23349180/java-config-for-spring-interceptor-where-interceptor-is-using-autowired-spring-b)
@@ -100,6 +112,34 @@ public class WebConfig extends WebMvcConfigurerAdapter {
         registry.addInterceptor(localeInterceptor());
     }
 
+}
+```
+
+**工具类设计**
+
+```java
+/* 通常是以public static方法的形式，向外提供功能. 例如密码，时间，id计算等等。
+但是有些工具类需要使用到Spring bean， 例如redisUtils -> redisTemplate
+*/
+
+// 传统写法
+public  class RedisUtil {
+    private static RedisTemplate<String, Object> redisTemplate;
+
+    public static setRedisTemplate(RedisTemplate<String, Object> redisTemplate){
+        this.redisTemplate = redisTemplate;
+    }
+}    还有一些优化，静态单例，类加载优化等 https://blog.csdn.net/u013885298/article/details/106436446/ 
+
+// 借助spring
+@Component
+public final class RedisUtil {
+
+    @Autowired
+    @Qualifier("redisTemplate")
+    private RedisTemplate<String, Object> redisTemplate;
+    
+    // other methods
 }
 ```
 

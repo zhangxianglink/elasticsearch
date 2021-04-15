@@ -22,8 +22,6 @@ public class RedisTemplateTest {
 		 Object foo = redisTemplate.opsForValue().get("hello");
 	     System.out.println(foo);
 	     
-		  Object object = redisTemplate.opsForValue().get("820b8435-b4c9-4441-bc4d-80672da209bd");
-		System.err.println(object.toString());
 		 
 	}
 	
