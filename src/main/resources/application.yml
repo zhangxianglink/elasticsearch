@@ -3,5 +3,8 @@ spring:
     host: 101.133.132.255
     port: 6379
     password: redispwd
+zookeeper:
+  address: 101.133.132.255:31001,101.133.132.255:31003,101.133.132.255:31002
+  timeout: 10000
 
 
