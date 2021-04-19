@@ -1,9 +1,13 @@
 package com.example.demo.service;
 
-public interface DemoService {
+public abstract class DemoService {
 	
-	String key();
+	public String key() {return null;}
 	
-	String hello();
+	public String hello() { return null;}
+	
+	public String other() {
+		return "DemoService";
+	}
 
 }

@@ -5,16 +5,18 @@ import org.springframework.stereotype.Service;
 import com.example.demo.service.DemoService;
 
 @Service
-public class CdemoServiceimpl implements DemoService {
+public class CdemoServiceimpl extends DemoService {
 
-	@Override
 	public String key() {
 		return "C";
 	}
 
-	@Override
 	public String hello() {
 		return "C hello .....";
 	}
 
+	@Override
+	public String other() {
+		return super.other();
+	}
 }
