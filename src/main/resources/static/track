@@ -1,0 +1,82 @@
+https://www.cnblogs.com/haixiang/p/12040272.html
+https://zhuanlan.zhihu.com/p/98022390
+
+PUT hootin_track
+{
+  "settings": {
+    "index": {
+        "number_of_shards" : "1",
+        "number_of_replicas" : "0"
+    }
+  },
+  "mappings": {
+    "properties": {
+      "user" : {
+        "type": "keyword"
+      },
+      "channe": {
+        "type": "keyword"
+      },
+      "version": {
+        "type": "keyword"
+      },
+      "from_page": {
+        "type": "keyword"
+      },
+      "tags" : {
+        "type" : "text",
+        "analyzer": "ik_smart",
+        "search_analyzer": "ik_smart"
+      },
+      "track_time" : {
+        "type": "long"
+      }
+    }
+  }
+}
+
+GET _analyze
+{
+  "analyzer":"ik_max_word",
+  "text":"中华人民共和国大会堂"
+}
+
+PUT hootin_track/_doc/2
+{
+  "user": "1Al",
+  "channe": "app",
+  "version": "4.12",
+  "form_page": "营业界面",
+  "tags": ["3号","2buy"],
+  "track_time":124457515
+}
+
+GET hootin_track/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        {
+          "term": {
+            "version": "4.12"
+          }
+        },
+        {
+          "range": {
+            "track_time": {
+              "gte": 124457510,
+              "lte": 124457515
+            }
+          }
+        }
+      ],
+      "must": [
+        {
+          "match": {
+            "tags": "3号"
+          }
+        }
+      ]
+    }
+  }
+}
