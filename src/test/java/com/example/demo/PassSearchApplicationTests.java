@@ -6,11 +6,14 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import com.example.demo.config.InsertDataListener;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.apache.lucene.search.TotalHits;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchRequest;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.Cancellable;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
@@ -51,8 +54,7 @@ class PassSearchApplicationTests {
 
 	@Test 
 	void insertUserIndex() throws IOException {
-		IndexRequest request = new IndexRequest("pass_user"); 
-		request.id("1"); 
+		IndexRequest request = new IndexRequest("pass_user");
 		User user = new User();
 		user.setAge(25);
 		user.setId("1");
@@ -66,6 +68,22 @@ class PassSearchApplicationTests {
 		String index = indexResponse.getIndex();
 		String id = indexResponse.getId();
 		log.info("index is :{} id : {} ", index, id);
+	}
+
+	@Test
+	void insertAsync() throws JsonProcessingException, InterruptedException {
+		IndexRequest request = new IndexRequest("pass_user");
+		User user = new User();
+		user.setAge(25);
+		user.setId("1");
+		user.setNickname("async");
+		user.setName("dog");
+		ObjectMapper ob = new ObjectMapper();
+		String writeValueAsString = ob.writeValueAsString(user);
+		request.source(writeValueAsString, XContentType.JSON);
+		client.indexAsync(request, RequestOptions.DEFAULT, new InsertDataListener());
+		System.out.println("异步操作");
+		Thread.sleep(2000);
 	}
 	
 	@Test
