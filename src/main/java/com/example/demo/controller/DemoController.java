@@ -20,7 +20,7 @@ public class DemoController {
 	@GetMapping("/branch/{key}")
 	@ResultAnnotation
 	public String branch(@PathVariable("key") String key ) {
-		return DemoConfig.getService(key).hello();
+		return DemoConfig.getService(key).other();
 	}
 
 }
