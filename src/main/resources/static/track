@@ -80,3 +80,6 @@ GET hootin_track/_search
     }
   }
 }
+
+// kafka consumer
+https://www.jianshu.com/p/a64defb44a23
