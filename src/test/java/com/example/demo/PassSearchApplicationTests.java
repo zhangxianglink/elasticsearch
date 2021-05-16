@@ -1,6 +1,9 @@
 package com.example.demo;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +19,11 @@ import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.client.Cancellable;
 import org.elasticsearch.client.RequestOptions;
 import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.client.indices.CreateIndexRequest;
+import org.elasticsearch.client.indices.GetIndexRequest;
+import org.elasticsearch.common.settings.Settings;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
@@ -72,14 +80,16 @@ class PassSearchApplicationTests {
 
 	@Test
 	void insertAsync() throws JsonProcessingException, InterruptedException {
-		IndexRequest request = new IndexRequest("pass_user");
-		User user = new User();
-		user.setAge(25);
-		user.setId("1");
-		user.setNickname("async");
-		user.setName("dog");
+		IndexRequest request = new IndexRequest("test-1");
+		HashMap<String, Object> map = new HashMap<>();
+		map.put("user","c_1");
+		map.put("channel", "香奈儿");
+		map.put("version", "1.0.1");
+		map.put("from_page", "首页");
+		map.put("tags", Arrays.asList("1号","2号","3号"));
+		map.put("track_time", LocalDateTime.now().getSecond());
 		ObjectMapper ob = new ObjectMapper();
-		String writeValueAsString = ob.writeValueAsString(user);
+		String writeValueAsString = ob.writeValueAsString(map);
 		request.source(writeValueAsString, XContentType.JSON);
 		client.indexAsync(request, RequestOptions.DEFAULT, new InsertDataListener());
 		System.out.println("异步操作");
@@ -129,5 +139,53 @@ class PassSearchApplicationTests {
 	}
 	
 	//https://mp.weixin.qq.com/s/9dmKmqk8YA6ZPfpH7paqpQ
-	//https://mp.weixin.qq.com/s/ojH-X3emovz2YOzoqNYPDQ	
+	//https://mp.weixin.qq.com/s/ojH-X3emovz2YOzoqNYPDQ
+
+	@Test
+	public void createIndex() {
+		HashMap<String, String> map = new HashMap<>();
+		map.put("user", "keyword");
+		map.put("channel", "keyword");
+		map.put("version", "keyword");
+		map.put("from_page", "keyword");
+		map.put("tags", "text");
+		map.put("track_time", "date");
+		try {
+			//判断indexName是否已经存在, mapping只能新增字段，如果修改需要新建索引
+			GetIndexRequest exist=new GetIndexRequest("test-1");
+			boolean exists = client.indices().exists(exist, RequestOptions.DEFAULT);
+			log.info("索引是否存在：{}",exists);
+			if (!exists) {
+				CreateIndexRequest requestIndex = new CreateIndexRequest("test-1");
+				requestIndex.settings(
+						Settings.builder().put("index.number_of_shards", 1).put("index.number_of_replicas", 0));
+				XContentBuilder builder = XContentFactory.jsonBuilder();
+				builder.startObject();
+				{
+					builder.startObject("properties");
+					{
+						for (Map.Entry<String, String> entry : map.entrySet()) {
+							builder.startObject(entry.getKey());
+							{
+								builder.field("type", entry.getValue());
+								if (entry.getValue().equals("text")){
+									builder.field("analyzer","ik_smart");
+								}
+								if (entry.getValue().equals("date")){
+									builder.field("format","yyyy-MM-dd HH:mm:ss||strict_date_optional_time||epoch_millis");
+								}
+							}
+							builder.endObject();
+						}
+					}
+					builder.endObject();
+				}
+				builder.endObject();
+				requestIndex.mapping(builder);
+				client.indices().create(requestIndex, RequestOptions.DEFAULT);
+			}} catch (Exception e) {
+			log.error("索引创建异常: {}",e);
+		}
+
+	}
 }

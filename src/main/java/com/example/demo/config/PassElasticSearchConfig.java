@@ -19,7 +19,7 @@ public class PassElasticSearchConfig {
 	@Bean("passSearchClient")
 	public RestHighLevelClient passSearchClient() {
 		RestClientBuilder builder = RestClient.builder(
-		        new HttpHost("1xxxx", 9200, "http"));
+		        new HttpHost("xxxxx", 9200, "http"));
 		builder.setFailureListener(new RestClient.FailureListener() {
 		    @Override
 		    public void onFailure(Node node) {

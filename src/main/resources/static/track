@@ -14,7 +14,7 @@ PUT hootin_track
       "user" : {
         "type": "keyword"
       },
-      "channe": {
+      "channel": {
         "type": "keyword"
       },
       "version": {
