@@ -7,4 +7,8 @@ zookeeper:
   address: 101.133.132.255:31001,101.133.132.255:31003
   timeout: 10000
 
+kafka:
+  topic:
+    log: topic_log2
+
 

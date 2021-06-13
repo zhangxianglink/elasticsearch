@@ -18,8 +18,8 @@ public class RedisTemplateTest {
 	
 	@Test
 	public void getkey() {
-		 redisTemplate.opsForValue().set("hello","world");
-		 Object foo = redisTemplate.opsForValue().get("hello");
+
+		 Object foo = redisTemplate.opsForValue().get("gakki");
 	     System.out.println(foo);
 	     
 		 

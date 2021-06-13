@@ -51,6 +51,13 @@
             <artifactId>lombok</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.example</groupId>
+            <artifactId>demo</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+
+
         <!-- zookeeper -->
         <dependency>
             <groupId>org.apache.zookeeper</groupId>
